@@ -1,0 +1,1 @@
+RUN =====> npx tailwindcss -i main.css -o ./dist/output.css --watch

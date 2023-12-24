@@ -19,5 +19,3 @@ $(document).ready(function () {
     $("#prizeName").text(prizeName);
   });
 });
-
-// Handle change event of the select element

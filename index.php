@@ -25,7 +25,7 @@ include('dbconnect.php');
     <aside class="w-20 relative z-20 flex-shrink-0  px-2 overflow-y-auto bg-indigo-600 sm:block">
       <div class="mb-6">
         <!--Start logo -->
-        <a href="#" class="flex justify-center">
+        <a href="dashboard.php" class="flex justify-center">
           <div class="w-14 h-14 rounded-full bg-gray-300 border-2 border-white mt-2">
             <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVxhAxJ4D7MOeTTj6kR9PBeZonW5HM7giKjTbEmR-HMBwf3G1VqGnlwpO1kWrdyIZu8_U&usqp=CAU" class="rounded-full w-auto" />
           </div>
@@ -34,18 +34,13 @@ include('dbconnect.php');
         <!--Start NavItem -->
         <div>
           <ul class="mt-6 leading-10 px-4">
-            <li class="mb-3 p-2 rounded-md flex items-center justify-center bg-blue-400 cursor-pointer" @click="openMenu !== 1 ? openMenu = 1 : openMenu = null">
+            <a href="#" class="mb-3 p-2 rounded-md flex items-center justify-center bg-blue-400 cursor-pointer" @click="openMenu !== 1 ? openMenu = 1 : openMenu = null">
               <i class="fas fa-align-left fa-sm text-white"></i>
-            </li>
-            <li class="mb-3 p-2 rounded-md flex items-center justify-center bg-pink-400 cursor-pointer">
+            </a>
+            <a href="dashboard.php" class="mb-3 p-2 rounded-md flex items-center justify-center bg-pink-400 cursor-pointer">
               <i class="fas fa-question-circle fa-sm text-white"></i>
-            </li>
-            <li class="mb-3 p-2 rounded-md flex items-center justify-center bg-yellow-400 cursor-pointer">
-              <i class="fas fa-headphones fa-sm text-white"></i>
-            </li>
-            <li class="absolute bottom-0 mb-3 p-2 rounded-full flex items-center mx-auto bg-white cursor-pointer">
-              <i class="fas fa-power-off fa-sm text-indigo-600"></i>
-            </li>
+            </a>
+
           </ul>
         </div>
         <!--End NavItem -->
@@ -56,8 +51,8 @@ include('dbconnect.php');
     <div class="flex flex-col flex-1 w-full overflow-y-auto">
       <!--Start Topbar -->
       <!--End Topbar -->
-      <main class="relative z-0 flex-1 pb-8 px-6 bg-gray-600">
-        <div class="grid pb-10  mt-4">
+      <main class="relative z-0 flex-1 px-6 bg-gray-600">
+        <div class="grid  mt-4">
           <!-- Start Content-->
 
           <div class="w-full flex space-x-2 justify-between relative">
@@ -100,9 +95,15 @@ include('dbconnect.php');
 
           <div class="pt-4 flex">
             <div class="prize w-96 m-2">
-              <div class="card w-96 bg-base-100 shadow-xl">
-                <figure class="px-5 pt-10">
-                  <img id="prizeImage" src="./image/qs.jpg" alt="Select Items First!" class="rounded-xl" />
+              <div class="card shadow-xl h-14 w-full flex justify-center items-center bg-red-500">
+                <div class="py-2 flex flex-col justify-center items-center text-center ">
+                  <p class="card-title" id="shuffleDisplay"> Name Generate</p>
+                </div>
+              </div>
+
+              <div class="card w-96 bg-base-100 shadow-xl mt-4 ">
+                <figure class="px-2 pt-10 object-fill">
+                  <img id="prizeImage" src="./image/qs.jpg" alt="Select Items First!" class="rounded-xl object-fit h-60 w-60" />
                 </figure>
                 <div class="card-body items-center text-center">
                   <p id="prizeName" class="card-title"></p>
@@ -111,20 +112,60 @@ include('dbconnect.php');
               </div>
 
               <div class="flex justify-center mt-4">
-                <p class="btn bg-yellow-500 btn-accent w-full h-40 text-gray-900 font-bold text-4xl">START</p>
+                <button id="btnTry" class="btn bg-yellow-500 btn-accent w-full h-28 text-gray-900 font-bold text-4xl">START</button>
               </div>
             </div>
             <!-- Winner -->
-            <div class=" m-2 w-full">
+
+            <?php
+            $sql = "SELECT *
+            FROM tbluser
+            LEFT JOIN tblwinner ON tbluser.id = tblwinner.userid
+            WHERE tblwinner.userid IS NULL"; // Adjust the query based on your table structure
+            $query = $dbh->prepare($sql);
+            $query->execute();
+            $results = $query->fetchAll(PDO::FETCH_ASSOC);
+
+            // Convert participant details to a JavaScript array
+            $participantsArray = json_encode($results);
+
+            ?>
+            <div class=" m-2 w-full flex flex-col">
+
+
+
               <div id="cardContainer" class="w-full flex flex-wrap justify-center space-x-4 space-y-4 items-center">
                 <div class="card w-60 h-60 bg-base-100 shadow-xl">
-                  <img class="w-full h-full" src="./image/qs.jpg" alt="Shoes" class="rounded-xl" />
                   <div class="py-2 flex flex-col justify-center items-center text-center">
-                    <p class="card-title">Winner Name</p>
-                    <p class="card-title">Winner ID</p>
+                    <h1 class="card-title " id="firstField"> </h1>
+                    <p class="card-title border border-blue-950" id="firstIdField">****</p>
                   </div>
+                  <span id="firstProfileField"> <img class="w-full h-60 rounded-xl" src="./image/qs.jpg" alt=""></span>
+
                 </div>
+
+                <div class="card w-60 h-60 bg-base-100 shadow-xl">
+                  <div class="py-2 flex flex-col justify-center items-center text-center">
+                    <p id="secondField"></p>
+                    <p id="secondIdField"></p>
+                  </div>
+                  <span id="secondProfileField" />
+
+                </div>
+
+                <div class="card w-60 h-60 bg-base-100 shadow-xl">
+                  <div class="py-2 flex flex-col justify-center items-center text-center">
+                    <p id="thirdField"></p>
+                    <p id="thirdIdField"></p>
+
+                  </div>
+                  <span id="thirdProfileField" />
+
+
+                </div>
+
               </div>
+
             </div>
 
           </div>
@@ -157,10 +198,10 @@ include('dbconnect.php');
         var cardDiv = document.createElement('div');
         cardDiv.className = 'card w-60 h-60 bg-base-100 shadow-xl';
         cardDiv.innerHTML = `
-                <img class="w-full h-full" src="https://daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg" alt="Shoes" class="rounded-xl" />
+                <img id="firstProfileField" class="w-full h-full" src="" alt="Shoes" class="rounded-xl" />
                 <div class="py-2 flex flex-col justify-center items-center text-center">
-                    <p class="card-title">Name: <?php echo htmlentities($row->prizeName); ?></p>
-                    <p class="card-title">ID: B20125</p>
+                    <p class="card-title" id="firstIdField" ></p>
+                    <p class="card-title" id="firstProfileField"></p>
                 </div>
             `;
 
@@ -168,6 +209,94 @@ include('dbconnect.php');
         document.getElementById('cardContainer').appendChild(cardDiv);
       }
     });
+
+
+    const shuffleDisplay = document.getElementById("shuffleDisplay");
+    const btnTry = document.getElementById("btnTry");
+    const firstField = document.getElementById("firstField");
+    const secondField = document.getElementById("secondField");
+    const thirdField = document.getElementById("thirdField");
+    const firstIdField = document.getElementById("firstIdField");
+    const secondIdField = document.getElementById("secondIdField");
+    const thirdIdField = document.getElementById("thirdIdField");
+    const firstProfileField = document.getElementById("firstProfileField");
+    const secondProfileField = document.getElementById("secondProfileField");
+    const thirdProfileField = document.getElementById("thirdProfileField");
+
+    let participants = <?php echo $participantsArray; ?>;
+    let currentWinnerState = "first";
+
+    [firstField, secondField, thirdField].forEach((field) => {
+      field.style.display = "none";
+    });
+
+    btnTry.addEventListener("click", async () => {
+      if (participants.length && currentWinnerState) {
+        participants.sort(() => Math.floor(Math.random() - 0.5));
+
+        for (let i = 0; i < participants.length; i++) {
+          await sleep(50); // Add a delay for visibility
+          const selectedParticipant = participants[i];
+          console.log(`Selected Participant: ${selectedParticipant.name}`);
+          shuffleDisplay.textContent = selectedParticipant.name;
+        }
+
+        participants.splice(0, 1);
+
+        // Fetch winner details directly from the participants array
+        const winnerName = shuffleDisplay.textContent;
+        const winnerDetails = fetchWinnerDetails(winnerName);
+
+        // Display the winner in the appropriate fields
+        if (winnerDetails && currentWinnerState === "first") {
+          displayWinner(firstField, firstIdField, firstProfileField, winnerDetails);
+          currentWinnerState = "second";
+        } else if (winnerDetails && currentWinnerState === "second") {
+          displayWinner(secondField, secondIdField, secondProfileField, winnerDetails);
+          currentWinnerState = "third";
+        } else if (winnerDetails && currentWinnerState === "third") {
+          displayWinner(thirdField, thirdIdField, thirdProfileField, winnerDetails);
+          currentWinnerState = "";
+          shuffleDisplay.textContent = "display";
+        }
+      }
+    });
+
+    function displayWinner(nameField, idField, profileField, winnerDetails) {
+      nameField.style.display = "";
+      nameField.textContent = shuffleDisplay.textContent;
+      idField.textContent = `ID: ${winnerDetails.id}`;
+      if (winnerDetails.profileImageUrl) {
+        // Use innerHTML to include the <img> tag
+        profileField.textContent = `Profile: ${winnerDetails.profile}`;
+      } else {
+        profileField.innerHTML = `<img class="w-full h-60 rounded-xl" src="${winnerDetails.profile}" alt="Profile Image">`;
+      }
+
+      console.log("Profile Image URL:", winnerDetails.profile);
+    }
+
+
+    // function displayWinner(nameField, idField, profileField, winnerDetails) {
+    //   nameField.style.display = "";
+    //   nameField.textContent = shuffleDisplay.textContent;
+    //   idField.textContent = `ID: ${winnerDetails.id}`;
+    //   if (winnerDetails.profileImageUrl) {
+    //     // Use innerHTML to include the <img> tag
+    //     profileField.textContent = `Profile: ${winnerDetails.profile}`;
+    //   } else {
+    //     profileField.innerHTML = `<img class="w-60 h-40 rounded-xl" src="${winnerDetails.profile}" alt="Profile Image">`;
+    //   }
+    // }
+
+    function fetchWinnerDetails(winnerName) {
+      // Find the winner details in the participants array based on the name
+      return participants.find(participant => participant.name === winnerName);
+    }
+
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
   </script>
 
 </body>

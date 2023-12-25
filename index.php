@@ -1,8 +1,8 @@
 <?php
-
 include('dbconnect.php');
 
 ?>
+
 
 <!DOCTYPE html>
 <html data-theme="dracula">
@@ -67,9 +67,9 @@ include('dbconnect.php');
               <option>5</option>
             </select>
 
-            <select id="prizeSelect" class="select select-info w-full ">
+            <select id="prizeSelect" class="select select-info w-full">
               <option disabled selected>Select Prize</option>
-              <?php $sql = "SELECT tblprize.id ,tblprize.prizeName,tblprize.prizePic FROM tblprize";
+              <?php $sql = "SELECT tblprize.id as prizeid ,tblprize.prizeName,tblprize.prizePic FROM tblprize";
               $query = $dbh->prepare($sql);
               $query->execute();
               $results = $query->fetchAll(PDO::FETCH_OBJ);
@@ -78,7 +78,7 @@ include('dbconnect.php');
                 foreach ($results as $row) {
 
               ?>
-                  <option value="<?php echo $row->id; ?>" data-img="<?php echo htmlentities($row->prizePic); ?>" data-name="<?php echo htmlentities($row->prizeName); ?>">
+                  <option value="<?php echo $row->prizeid; ?>" data-img="<?php echo htmlentities($row->prizePic); ?>" data-name="<?php echo htmlentities($row->prizeName); ?>">
                     <?php echo htmlentities($row->prizeName); ?>
                   </option>
               <?php
@@ -90,7 +90,7 @@ include('dbconnect.php');
 
             </select>
 
-            <button class="btn btn-active btn-success">Save</button>
+            <button type="submit" name="submit" class="btn btn-active btn-success">Save</button>
           </div>
 
           <div class="pt-4 flex">
@@ -118,10 +118,11 @@ include('dbconnect.php');
             <!-- Winner -->
 
             <?php
-            $sql = "SELECT *
-            FROM tbluser
-            LEFT JOIN tblwinner ON tbluser.id = tblwinner.userid
-            WHERE tblwinner.userid IS NULL"; // Adjust the query based on your table structure
+            $sql = "SELECT tblprize.id as prizeid, tbluser.*
+              FROM tbluser
+              LEFT JOIN tblwinner ON tbluser.id = tblwinner.userId
+              LEFT JOIN tblprize ON tblwinner.priceID = tblprize.id
+              WHERE tblwinner.userid IS NULL"; // Adjust the query based on your table structure
             $query = $dbh->prepare($sql);
             $query->execute();
             $results = $query->fetchAll(PDO::FETCH_ASSOC);
@@ -137,7 +138,7 @@ include('dbconnect.php');
               <div id="cardContainer" class="w-full flex flex-wrap justify-center space-x-4 space-y-4 items-center">
                 <div class="card w-60 h-60 bg-base-100 shadow-xl">
                   <div class="py-2 flex flex-col justify-center items-center text-center">
-                    <h1 class="card-title " id="firstField"> </h1>
+                    <p class="card-title " id="firstField"> </p>
                     <p class="card-title border border-blue-950" id="firstIdField">****</p>
                   </div>
                   <span id="firstProfileField"> <img class="w-full h-60 rounded-xl" src="./image/qs.jpg" alt=""></span>
@@ -171,46 +172,14 @@ include('dbconnect.php');
           </div>
         </div>
 
+
+      </main>
     </div>
-    </main>
-  </div>
   </div>
 
 
 
   <script>
-    // Handle change event of the select element
-    document.getElementById('winnerSelector');
-
-    // Trigger change event to generate the initial card
-    document.getElementById('winnerSelector').dispatchEvent(new Event('change'));
-
-    // Handle change event of the select element
-    document.getElementById('winnerSelector').addEventListener('change', function() {
-      // Get the selected value
-      var selectedValue = parseInt(this.value);
-
-      // Clear existing cards
-      document.getElementById('cardContainer').innerHTML = '';
-
-      // Generate cards based on the selected value
-      for (var i = 1; i <= selectedValue; i++) {
-        var cardDiv = document.createElement('div');
-        cardDiv.className = 'card w-60 h-60 bg-base-100 shadow-xl';
-        cardDiv.innerHTML = `
-                <img id="firstProfileField" class="w-full h-full" src="" alt="Shoes" class="rounded-xl" />
-                <div class="py-2 flex flex-col justify-center items-center text-center">
-                    <p class="card-title" id="firstIdField" ></p>
-                    <p class="card-title" id="firstProfileField"></p>
-                </div>
-            `;
-
-        // Append the card to the container
-        document.getElementById('cardContainer').appendChild(cardDiv);
-      }
-    });
-
-
     const shuffleDisplay = document.getElementById("shuffleDisplay");
     const btnTry = document.getElementById("btnTry");
     const firstField = document.getElementById("firstField");
@@ -226,9 +195,9 @@ include('dbconnect.php');
     let participants = <?php echo $participantsArray; ?>;
     let currentWinnerState = "first";
 
-    [firstField, secondField, thirdField].forEach((field) => {
-      field.style.display = "none";
-    });
+    // [firstField, secondField, thirdField].forEach((field) => {
+    //   field.style.display = "none";
+    // });
 
     btnTry.addEventListener("click", async () => {
       if (participants.length && currentWinnerState) {
@@ -241,6 +210,9 @@ include('dbconnect.php');
           shuffleDisplay.textContent = selectedParticipant.name;
         }
 
+        const selectedWinner = participants.shift();
+
+
         participants.splice(0, 1);
 
         // Fetch winner details directly from the participants array
@@ -251,43 +223,48 @@ include('dbconnect.php');
         if (winnerDetails && currentWinnerState === "first") {
           displayWinner(firstField, firstIdField, firstProfileField, winnerDetails);
           currentWinnerState = "second";
+          console.log(firstField)
+          insertWinnerData(winnerDetails, document.getElementById("prizeSelect"));
+
         } else if (winnerDetails && currentWinnerState === "second") {
           displayWinner(secondField, secondIdField, secondProfileField, winnerDetails);
           currentWinnerState = "third";
+
+          insertWinnerData(winnerDetails, document.getElementById("prizeSelect"));
+
         } else if (winnerDetails && currentWinnerState === "third") {
           displayWinner(thirdField, thirdIdField, thirdProfileField, winnerDetails);
           currentWinnerState = "";
           shuffleDisplay.textContent = "display";
+
+          insertWinnerData(winnerDetails, document.getElementById("prizeSelect"));
         }
       }
     });
 
-    function displayWinner(nameField, idField, profileField, winnerDetails) {
-      nameField.style.display = "";
+    function displayWinner(nameField, idField, profileField, winnerDetails, winnerPrize, selectElement) {
       nameField.textContent = shuffleDisplay.textContent;
       idField.textContent = `ID: ${winnerDetails.id}`;
+
+      // Check if winnerDetails has a profile image URL
       if (winnerDetails.profileImageUrl) {
-        // Use innerHTML to include the <img> tag
         profileField.textContent = `Profile: ${winnerDetails.profile}`;
       } else {
         profileField.innerHTML = `<img class="w-full h-60 rounded-xl" src="${winnerDetails.profile}" alt="Profile Image">`;
       }
 
-      console.log("Profile Image URL:", winnerDetails.profile);
+      // Update winnerPrize based on the selected option
+      if (selectElement && selectElement.options) {
+        var selectedOption = selectElement.options[selectElement.selectedIndex];
+        if (selectedOption) {
+          winnerDetails.prizeId = selectedOption.value;
+          winnerDetails.prizeName = selectedOption.getAttribute('data-name');
+          winnerDetails.prizePic = selectedOption.getAttribute('data-img');
+        }
+      }
+
     }
 
-
-    // function displayWinner(nameField, idField, profileField, winnerDetails) {
-    //   nameField.style.display = "";
-    //   nameField.textContent = shuffleDisplay.textContent;
-    //   idField.textContent = `ID: ${winnerDetails.id}`;
-    //   if (winnerDetails.profileImageUrl) {
-    //     // Use innerHTML to include the <img> tag
-    //     profileField.textContent = `Profile: ${winnerDetails.profile}`;
-    //   } else {
-    //     profileField.innerHTML = `<img class="w-60 h-40 rounded-xl" src="${winnerDetails.profile}" alt="Profile Image">`;
-    //   }
-    // }
 
     function fetchWinnerDetails(winnerName) {
       // Find the winner details in the participants array based on the name
@@ -296,6 +273,39 @@ include('dbconnect.php');
 
     function sleep(ms) {
       return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    function fetchWinnerDetails(winnerName) {
+      // Find the winner details in the participants array based on the name
+      return participants.find(participant => participant.name === winnerName);
+    }
+
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    function insertWinnerData(winnerDetails, selectElement) {
+      // Make an AJAX request to insert data into tblwinner
+      const xhr = new XMLHttpRequest();
+      xhr.open("POST", "insert_winner.php", true);
+      xhr.setRequestHeader("Content-Type", "application/json");
+
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          console.log(xhr.responseText);
+        }
+      };
+
+      const data = {
+        winnerDetails: winnerDetails,
+        selectedOption: {
+          id: selectElement.value,
+          name: selectElement.getAttribute('data-name'),
+          pic: selectElement.getAttribute('data-img')
+        }
+      };
+
+      xhr.send(JSON.stringify(data));
     }
   </script>
 

@@ -1,5 +1,4 @@
 // Change dinamix prize
-
 $(document).ready(function () {
   // Set the initial image source
   $("#prizeImage").attr("src", "");

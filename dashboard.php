@@ -2,6 +2,13 @@
 
 include('dbconnect.php');
 
+if (isset($_GET['delid'])) {
+  $rid = intval($_GET['delid']);
+  $sql = "delete from tblwinner where id=:rid";
+  $query = $dbh->prepare($sql);
+  $query->bindParam(':rid', $rid, PDO::PARAM_STR);
+  $query->execute();
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -15,6 +22,8 @@ include('dbconnect.php');
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
+  <script src=""></script>
+
 </head>
 
 <body>
@@ -230,48 +239,101 @@ include('dbconnect.php');
           </div>
 
 
-          <div class="mt-4 align-middle inline-block min-w-full shadow overflow-hidden bg-white shadow-dashboard px-8 pt-3 rounded-bl-lg rounded-br-lg">
-            <table class="min-w-full">
+          <div class="m-4 align-middle inline-block min-w-full shadow overflow-hidden bg-white shadow-dashboard px-8 pt-3 rounded-bl-lg rounded-br-lg">
+            <div class="align-middle rounded-tl-lg rounded-tr-lg inline-block w-full py-4 overflow-hidden bg-white  px-12">
+              <div class="flex justify-between">
+                <div class="inline-flex border rounded w-7/12 px-2 lg:px-6 h-12 bg-transparent  border-gray-900 hover:border-2 hover:border-blue-500">
+                  <div class="flex flex-wrap items-stretch w-full h-full mb-6 relative">
+                    <div class="flex">
+                      <span class="flex items-center leading-normal bg-transparent rounded rounded-r-none border border-r-0 border-none lg:px-3 py-2 whitespace-no-wrap text-grey-dark text-sm">
+                        <svg width="18" height="18" class="w-4 lg:w-auto" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M8.11086 15.2217C12.0381 15.2217 15.2217 12.0381 15.2217 8.11086C15.2217 4.18364 12.0381 1 8.11086 1C4.18364 1 1 4.18364 1 8.11086C1 12.0381 4.18364 15.2217 8.11086 15.2217Z" stroke="#455A64" stroke-linecap="round" stroke-linejoin="round" />
+                          <path d="M16.9993 16.9993L13.1328 13.1328" stroke="#455A64" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                      </span>
+                    </div>
+                    <input id="searchInput" type="text" class="bg-white flex-shrink flex-grow flex-auto leading-normal tracking-wide w-px flex-1 border border-none border-l-0 rounded rounded-l-none px-3 relative focus:outline-none text-xs lg:text-sm lg:text-base text-gray-500 " placeholder="Search">
+                    <div id="resultCount"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+            <table class="min-w-full student-data-table">
               <thead>
                 <tr>
                   <th class="px-6 py-3 border-b-2 border-gray-300 text-left leading-4 text-blue-500 tracking-wider">ID</th>
                   <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-sm leading-4 text-blue-500 tracking-wider">Full Name</th>
                   <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-sm leading-4 text-blue-500 tracking-wider">Branch</th>
                   <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-sm leading-4 text-blue-500 tracking-wider">Department</th>
-                  <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-sm leading-4 text-blue-500 tracking-wider">Prize</th>
                   <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-sm leading-4 text-blue-500 tracking-wider">Profile</th>
+                  <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-sm leading-4 text-blue-500 tracking-wider">Winned Prize</th>
+
                   <th class="px-6 py-3 border-b-2 border-gray-300"></th>
                 </tr>
               </thead>
               <tbody class="bg-white">
-                <tr>
-                  <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
-                    <div class="flex items-center">
-                      <div>
-                        <div class="text-sm leading-5 text-gray-800">#1</div>
-                      </div>
-                    </div>
-                  </td>
-                  <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
-                    <div class="text-sm leading-5 text-blue-900">Damilare Anjorin</div>
-                  </td>
-                  <td class="px-6 py-4 whitespace-no-wrap border-b text-blue-900 border-gray-500 text-sm leading-5">damilareanjorin1@gmail.com</td>
-                  <td class="px-6 py-4 whitespace-no-wrap border-b text-blue-900 border-gray-500 text-sm leading-5">+2348106420637</td>
-                  <td class="px-6 py-4 whitespace-no-wrap border-b text-blue-900 border-gray-500 text-sm leading-5">
-                    <span class="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
-                      <span aria-hidden class="absolute inset-0 bg-green-200 opacity-50 rounded-full"></span>
-                      <span class="relative text-xs">active</span>
-                    </span>
-                  </td>
-                  <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500 text-blue-900 text-sm leading-5">September 12</td>
-                  <td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-500 text-sm leading-5">
-                    <button class="px-5 py-2 border-blue-500 border text-blue-500 rounded transition duration-300 hover:bg-blue-700 hover:text-white focus:outline-none">View Details</button>
-                  </td>
-                </tr>
+                <?php
+                $sql = "SELECT tblprize.prizeName, tblprize.prizePic, tbluser.name, tbluser.staffID, tbluser.branch,
+                tbluser.dept, tbluser.profile, tblwinner.id AS winnerID
+                FROM tblwinner 
+                JOIN tbluser ON tbluser.id = tblwinner.userId
+                INNER JOIN tblprize ON tblprize.id = tblwinner.priceID
+                ORDER BY tblwinner.id DESC";
+                $query = $dbh->prepare($sql);
+                $query->execute();
+                $results = $query->fetchAll(PDO::FETCH_OBJ);
+                $cnt = 1;
+                if ($query->rowCount() > 0) {
+                  foreach ($results as $row) {
 
+                ?>
+                    <tr>
+                      <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
+                        <div class="flex items-center">
+                          <div>
+                            <div class="text-sm leading-5 text-gray-800"><?php echo htmlentities($cnt++) ?></div>
+                          </div>
+                        </div>
+                      </td>
+
+                      <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
+                        <div class="text-sm leading-5 text-blue-900"><?php echo htmlentities($row->name) ?></div>
+                      </td>
+
+                      <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
+                        <div class="flex items-center">
+                          <div>
+                            <div class="text-sm leading-5 text-gray-800"><?php echo htmlentities($row->branch) ?></div>
+                          </div>
+                        </div>
+                      </td>
+
+                      <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500">
+                        <div class="text-sm leading-5 text-blue-900"><?php echo htmlentities($row->dept) ?></div>
+                      </td>
+
+                      <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-500 text-blue-900 text-sm leading-5">
+                        <img class="object-fit w-16 h-16 rounded-full border border-gray-600" src="<?php echo htmlentities($row->profile) ?>" alt="">
+                      </td>
+
+                      <td class="px-6 py-4 whitespace-no-wrap border-b text-blue-900 border-gray-500 text-sm leading-5">
+                        <span class="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
+                          <span aria-hidden class="absolute inset-0 bg-green-300 opacity-50 rounded-full"></span>
+                          <span class="relative text-xs"><?php echo htmlentities($row->prizeName) ?></span>
+                        </span>
+                      </td>
+
+                      <td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-500 text-sm leading-5">
+                        <a href="dashboard.php?delid=<?php echo ($row->winnerID); ?>" onclick="return confirm('Do you really want to Delete ?');" class="px-5 py-2 border-red-500 border text-red-500 rounded transition duration-300 hover:bg-red-700 hover:text-white focus:outline-none">View Details</a>
+                      </td>
+                    </tr>
+                <?php }
+                } ?>
               </tbody>
             </table>
-            <div class="sm:flex-1 sm:flex sm:items-center sm:justify-between mt-4 work-sans">
+            <!-- <div class="sm:flex-1 sm:flex sm:items-center sm:justify-between mt-4 work-sans">
               <div>
                 <p class="text-sm leading-5 text-blue-700">
                   Showing
@@ -312,7 +374,7 @@ include('dbconnect.php');
                   </div>
                 </nav>
               </div>
-            </div>
+            </div> -->
           </div>
         </div>
         <!-- End Content-->
@@ -354,32 +416,59 @@ include('dbconnect.php');
   </div>
 
   <script>
-    var modal = document.getElementById("myModal");
+    function filterTable() {
+      // Get the input element and filter value
+      var input = document.getElementById("searchInput");
+      var filter = input.value.toLowerCase();
 
-    // Get the button that opens the modal
-    var btn = document.getElementById("myBtn");
+      // Get the table and rows
+      var table = document.querySelector(".student-data-table");
+      var rows = table.getElementsByTagName("tr");
 
-    // Get the <span> element that closes the modal
-    var span = document.getElementsByClassName("close")[0];
+      // Initialize a flag for not found
+      var notFound = true;
 
-    // When the user clicks the button, open the modal 
-    btn.onclick = function() {
-      modal.style.display = "block";
-    }
+      // Initialize a variable to count the results
+      var resultCount = 0;
 
-    // When the user clicks on <span> (x), close the modal
-    span.onclick = function() {
-      modal.style.display = "none";
-    }
+      // Loop through all table rows and hide those that don't match the search query
+      for (var i = 1; i < rows.length; i++) {
+        var cells = rows[i].getElementsByTagName("td");
+        var visible = false;
 
-    // When the user clicks anywhere outside of the modal, close it
-    window.onclick = function(event) {
-      if (event.target == modal) {
-        modal.style.display = "none";
+        // Loop through the cells in the current row
+        for (var j = 1; j < cells.length; j++) {
+          var cell = cells[j];
+          if (cell) {
+            var text = cell.textContent || cell.innerText;
+            if (text.toLowerCase().indexOf(filter) > -1) {
+              visible = true;
+              notFound = false; // At least one match was found
+              break;
+            }
+          }
+        }
+
+        // Toggle row visibility
+        rows[i].style.display = visible ? "" : "none";
+
+        // Increment the result count
+        if (visible) {
+          resultCount++;
+        }
       }
-    }
-  </script>
 
+      // Display the "Not Found" message and the result count
+      var notFoundMessage = document.getElementById("notFound");
+      notFoundMessage.style.display = notFound ? "block" : "none";
+
+      var resultCountElement = document.getElementById("resultCount");
+      resultCountElement.textContent = `Results Found: ${resultCount}`;
+    }
+
+    // Add an event listener to the search input
+    var searchInput = document.getElementById("searchInput");
+    searchInput.addEventListener("input", filterTable);
   </script>
 </body>
 

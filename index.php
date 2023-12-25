@@ -57,7 +57,7 @@ include('dbconnect.php');
 
           <div class="w-full flex space-x-2 justify-between relative">
 
-
+            <!-- 
             <select id="winnerSelector" class="select select-info max-w-xs w-full ">
               <option selected disabled> Select Winners </option>
               <option> 1 </option>
@@ -65,7 +65,7 @@ include('dbconnect.php');
               <option>3</option>
               <option>4</option>
               <option>5</option>
-            </select>
+            </select> -->
 
             <select id="prizeSelect" class="select select-info w-full">
               <option disabled selected>Select Prize</option>
@@ -90,7 +90,7 @@ include('dbconnect.php');
 
             </select>
 
-            <button type="submit" name="submit" class="btn btn-active btn-success">Save</button>
+            <!-- <button type="submit" name="submit" class="btn btn-active btn-success">Save</button> -->
           </div>
 
           <div class="pt-4 flex">
@@ -101,8 +101,8 @@ include('dbconnect.php');
                 </div>
               </div>
 
-              <div class="card w-96 bg-base-100 shadow-xl mt-4 ">
-                <figure class="px-2 pt-10 object-fill">
+              <div class="card w-fit bg-base-100 shadow-xl mt-4 ">
+                <figure class="px-10 pt-10 object-fill">
                   <img id="prizeImage" src="./image/qs.jpg" alt="Select Items First!" class="rounded-xl object-fit h-60 w-60" />
                 </figure>
                 <div class="card-body items-center text-center">
@@ -119,10 +119,10 @@ include('dbconnect.php');
 
             <?php
             $sql = "SELECT tblprize.id as prizeid, tbluser.*
-              FROM tbluser
-              LEFT JOIN tblwinner ON tbluser.id = tblwinner.userId
-              LEFT JOIN tblprize ON tblwinner.priceID = tblprize.id
-              WHERE tblwinner.userid IS NULL"; // Adjust the query based on your table structure
+            FROM tbluser
+            LEFT JOIN tblwinner ON tbluser.id = tblwinner.userId
+            LEFT JOIN tblprize ON tblwinner.priceID = tblprize.id
+            WHERE tblwinner.userid IS NULL"; // Adjust the query based on your table structure
             $query = $dbh->prepare($sql);
             $query->execute();
             $results = $query->fetchAll(PDO::FETCH_ASSOC);
@@ -135,42 +135,41 @@ include('dbconnect.php');
 
 
 
-              <div id="cardContainer" class="w-full flex flex-wrap justify-center space-x-4 space-y-4 items-center">
-                <div class="card w-60 h-60 bg-base-100 shadow-xl">
-                  <div class="py-2 flex flex-col justify-center items-center text-center">
-                    <p class="card-title " id="firstField"> </p>
-                    <p class="card-title border border-blue-950" id="firstIdField">****</p>
+              <div id="cardContainer" class="gap-2 w-full flex flex-wrap justify-center space-x-4  items-center">
+                <div class="flex flex-col bg-[#414955] p-2 rounded-lg">
+                  <div class="relative flex flex-col justify-center items-center text-center text-white">
+                    <p class="card-title text-2xl" id="firstField"> ******</p>
+                    <p class="card-title text-xl" id="firstIdField">****</p>
                   </div>
-                  <span id="firstProfileField"> <img class="w-full h-60 rounded-xl" src="./image/qs.jpg" alt=""></span>
-
+                  <div class="relative card w-60 h-60 bg-base-100 shadow-xl">
+                    <span class="absolute" id="firstProfileField"> <img class="w-full h-60 rounded-xl" src="./image/qs.jpg" alt=""></span>
+                  </div>
                 </div>
 
-                <div class="card w-60 h-60 bg-base-100 shadow-xl">
-                  <div class="py-2 flex flex-col justify-center items-center text-center">
-                    <p id="secondField"></p>
-                    <p id="secondIdField"></p>
+                <div class="flex flex-col bg-[#414955] p-2 rounded-lg">
+                  <div class="relative flex flex-col justify-center items-center text-center text-white">
+                    <p class="card-title text-2xl" id="secondField"> ******</p>
+                    <p class="card-title text-xl" id="secondIdField">****</p>
                   </div>
-                  <span id="secondProfileField" />
-
+                  <div class="relative card w-60 h-60 bg-base-100 shadow-xl">
+                    <span class="absolute" id="secondProfileField"><img class="w-full h-60 rounded-xl" src="./image/qs.jpg" alt=""></span>
+                  </div>
                 </div>
 
-                <div class="card w-60 h-60 bg-base-100 shadow-xl">
-                  <div class="py-2 flex flex-col justify-center items-center text-center">
-                    <p id="thirdField"></p>
-                    <p id="thirdIdField"></p>
-
+                <div class="flex flex-col bg-[#414955] p-2 rounded-lg">
+                  <div class="relative flex flex-col justify-center items-center text-center text-white">
+                    <p class="card-title text-2xl" id="thirdField"> ******</p>
+                    <p class="card-title text-xl" id="thirdIdField"> ****</p>
                   </div>
-                  <span id="thirdProfileField" />
-
-
+                  <div class="relative card w-60 h-60 bg-base-100 shadow-xl">
+                    <span class="absolute" id="thirdProfileField"><img class="w-full h-60 rounded-xl" src="./image/qs.jpg" alt=""></span>
+                  </div>
                 </div>
 
               </div>
 
             </div>
-
           </div>
-        </div>
 
 
       </main>
@@ -178,7 +177,7 @@ include('dbconnect.php');
   </div>
 
 
-
+  <!-- Draw Winner -->
   <script>
     const shuffleDisplay = document.getElementById("shuffleDisplay");
     const btnTry = document.getElementById("btnTry");
@@ -244,7 +243,7 @@ include('dbconnect.php');
 
     function displayWinner(nameField, idField, profileField, winnerDetails, winnerPrize, selectElement) {
       nameField.textContent = shuffleDisplay.textContent;
-      idField.textContent = `ID: ${winnerDetails.id}`;
+      idField.textContent = `អត្តលេខ: ${winnerDetails.staffID}`;
 
       // Check if winnerDetails has a profile image URL
       if (winnerDetails.profileImageUrl) {
@@ -257,7 +256,7 @@ include('dbconnect.php');
       if (selectElement && selectElement.options) {
         var selectedOption = selectElement.options[selectElement.selectedIndex];
         if (selectedOption) {
-          winnerDetails.prizeId = selectedOption.value;
+          winnerDetails.prizeid = selectedOption.value;
           winnerDetails.prizeName = selectedOption.getAttribute('data-name');
           winnerDetails.prizePic = selectedOption.getAttribute('data-img');
         }
@@ -308,6 +307,7 @@ include('dbconnect.php');
       xhr.send(JSON.stringify(data));
     }
   </script>
+  <!-- Draw Winner -->
 
 </body>
 

@@ -17,17 +17,19 @@ if (isset($_GET['delid'])) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="./dist/output.css">
-  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="./main.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
-  <script src=""></script>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
 
 </head>
 
 <body>
   <div class="flex h-screen w-full bg-gray-800 " x-data="{openMenu:1}">
+
     <!--Start SideBar-->
     <aside class="w-20 relative z-20 flex-shrink-0  px-2 overflow-y-auto bg-indigo-600 sm:block">
       <div class="mb-6">
@@ -115,8 +117,8 @@ if (isset($_GET['delid'])) {
       </div>
     </aside>
     <!-- End Open Menu -->
+    <!-- End SideBar -->
 
-    <!-- End Sidebar -->
     <div class="flex flex-col flex-1 w-full overflow-y-auto">
       <!--Start Topbar -->
       <!--End Topbar -->
@@ -253,13 +255,17 @@ if (isset($_GET['delid'])) {
                       </span>
                     </div>
                     <input id="searchInput" type="text" class="bg-white flex-shrink flex-grow flex-auto leading-normal tracking-wide w-px flex-1 border border-none border-l-0 rounded rounded-l-none px-3 relative focus:outline-none text-xs lg:text-sm lg:text-base text-gray-500 " placeholder="Search">
-                    <div id="resultCount"></div>
+
                   </div>
+
                 </div>
+
               </div>
             </div>
-
-
+            <div class="flex text-gray-900 justify-between">
+              <div id="resultCount"></div>
+              <div id="notFound">Not Found Message</div>
+            </div>
             <table class="min-w-full student-data-table">
               <thead>
                 <tr>
@@ -333,48 +339,53 @@ if (isset($_GET['delid'])) {
                 } ?>
               </tbody>
             </table>
+
+            <!-- PAGINATION -->
             <!-- <div class="sm:flex-1 sm:flex sm:items-center sm:justify-between mt-4 work-sans">
-              <div>
-                <p class="text-sm leading-5 text-blue-700">
-                  Showing
-                  <span class="font-medium">1</span>
-                  to
-                  <span class="font-medium">200</span>
-                  of
-                  <span class="font-medium">2000</span>
-                  results
-                </p>
-              </div>
-              <div>
-                <nav class="relative z-0 inline-flex shadow-sm">
-                  <div>
-                    <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm leading-5 font-medium text-gray-500 hover:text-gray-400 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-100 active:text-gray-500 transition ease-in-out duration-150" aria-label="Previous" v-on:click.prevent="changePage(pagination.current_page - 1)">
-                      <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
-                      </svg>
-                    </a>
-                  </div>
-                  <div>
-                    <a href="#" class="-ml-px relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm leading-5 font-medium text-blue-700 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-tertiary active:text-gray-700 transition ease-in-out duration-150 hover:bg-tertiary">
-                      1
-                    </a>
-                    <a href="#" class="-ml-px relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm leading-5 font-medium text-blue-600 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-tertiary active:text-gray-700 transition ease-in-out duration-150 hover:bg-tertiary">
-                      2
-                    </a>
-                    <a href="#" class="-ml-px relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm leading-5 font-medium text-blue-600 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-tertiary active:text-gray-700 transition ease-in-out duration-150 hover:bg-tertiary">
-                      3
-                    </a>
-                  </div>
-                  <div v-if="pagination.current_page < pagination.last_page">
-                    <a href="#" class="-ml-px relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm leading-5 font-medium text-gray-500 hover:text-gray-400 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-100 active:text-gray-500 transition ease-in-out duration-150" aria-label="Next">
-                      <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-                      </svg>
-                    </a>
-                  </div>
-                </nav>
-              </div>
-            </div> -->
+                <div>
+                  <p class="text-sm leading-5 text-blue-700">
+                    Showing
+                    <span class="font-medium">1</span>
+                    to
+                    <span class="font-medium">200</span>
+                    of
+                    <span class="font-medium">2000</span>
+                    results
+                  </p>
+                </div>
+                <div>
+                  <nav class="relative z-0 inline-flex shadow-sm">
+                    <div>
+                      <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm leading-5 font-medium text-gray-500 hover:text-gray-400 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-100 active:text-gray-500 transition ease-in-out duration-150" aria-label="Previous" v-on:click.prevent="changePage(pagination.current_page - 1)">
+                        <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                          <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+                        </svg>
+                      </a>
+                    </div>
+                    <div>
+                      <a href="#" class="-ml-px relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm leading-5 font-medium text-blue-700 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-tertiary active:text-gray-700 transition ease-in-out duration-150 hover:bg-tertiary">
+                        1
+                      </a>
+                      <a href="#" class="-ml-px relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm leading-5 font-medium text-blue-600 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-tertiary active:text-gray-700 transition ease-in-out duration-150 hover:bg-tertiary">
+                        2
+                      </a>
+                      <a href="#" class="-ml-px relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm leading-5 font-medium text-blue-600 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-tertiary active:text-gray-700 transition ease-in-out duration-150 hover:bg-tertiary">
+                        3
+                      </a>
+                    </div>
+                    <div v-if="pagination.current_page < pagination.last_page">
+                      <a href="#" class="-ml-px relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm leading-5 font-medium text-gray-500 hover:text-gray-400 focus:z-10 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-100 active:text-gray-500 transition ease-in-out duration-150" aria-label="Next">
+                        <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                          <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                        </svg>
+                      </a>
+                    </div>
+                  </nav>
+                </div>
+              </div> -->
+            <!-- PAGINATION -->
+
+
           </div>
         </div>
         <!-- End Content-->
@@ -415,61 +426,7 @@ if (isset($_GET['delid'])) {
   </div>
   </div>
 
-  <script>
-    function filterTable() {
-      // Get the input element and filter value
-      var input = document.getElementById("searchInput");
-      var filter = input.value.toLowerCase();
-
-      // Get the table and rows
-      var table = document.querySelector(".student-data-table");
-      var rows = table.getElementsByTagName("tr");
-
-      // Initialize a flag for not found
-      var notFound = true;
-
-      // Initialize a variable to count the results
-      var resultCount = 0;
-
-      // Loop through all table rows and hide those that don't match the search query
-      for (var i = 1; i < rows.length; i++) {
-        var cells = rows[i].getElementsByTagName("td");
-        var visible = false;
-
-        // Loop through the cells in the current row
-        for (var j = 1; j < cells.length; j++) {
-          var cell = cells[j];
-          if (cell) {
-            var text = cell.textContent || cell.innerText;
-            if (text.toLowerCase().indexOf(filter) > -1) {
-              visible = true;
-              notFound = false; // At least one match was found
-              break;
-            }
-          }
-        }
-
-        // Toggle row visibility
-        rows[i].style.display = visible ? "" : "none";
-
-        // Increment the result count
-        if (visible) {
-          resultCount++;
-        }
-      }
-
-      // Display the "Not Found" message and the result count
-      var notFoundMessage = document.getElementById("notFound");
-      notFoundMessage.style.display = notFound ? "block" : "none";
-
-      var resultCountElement = document.getElementById("resultCount");
-      resultCountElement.textContent = `Results Found: ${resultCount}`;
-    }
-
-    // Add an event listener to the search input
-    var searchInput = document.getElementById("searchInput");
-    searchInput.addEventListener("input", filterTable);
-  </script>
+  <script src="./main.js"></script>
 </body>
 
 </html>

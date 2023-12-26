@@ -18,11 +18,11 @@ if (isset($winnerDetails->id, $selectedOption->id)) {
     $winnerPrizeId = $selectedOption->id;
 
     // Insert into tblwinner
-    $sql = "INSERT INTO tblwinner (priceId, userID) VALUES (:priceId, :userID)";
+    $sql = "INSERT INTO tblwinner (prizeid, userID) VALUES (:prizeId, :userID)";
     $query = $dbh->prepare($sql);
 
     // Bind parameters
-    $query->bindParam(':priceId', $winnerPrizeId, PDO::PARAM_INT);
+    $query->bindParam(':prizeId', $winnerPrizeId, PDO::PARAM_INT);
     $query->bindParam(':userID', $winnerDetailsId, PDO::PARAM_INT);
 
     // Execute the query

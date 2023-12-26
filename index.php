@@ -34,9 +34,9 @@ include('dbconnect.php');
         <!--Start NavItem -->
         <div>
           <ul class="mt-6 leading-10 px-4">
-            <a href="#" class="mb-3 p-2 rounded-md flex items-center justify-center bg-blue-400 cursor-pointer" @click="openMenu !== 1 ? openMenu = 1 : openMenu = null">
+            <li class="mb-3 p-2 rounded-md flex items-center justify-center bg-blue-400 cursor-pointer" @click="openMenu !== 0 ? openMenu = 0 : openMenu = 1">
               <i class="fas fa-align-left fa-sm text-white"></i>
-            </a>
+            </li>
             <a href="dashboard.php" class="mb-3 p-2 rounded-md flex items-center justify-center bg-pink-400 cursor-pointer">
               <i class="fas fa-question-circle fa-sm text-white"></i>
             </a>
@@ -47,16 +47,12 @@ include('dbconnect.php');
       </div>
     </aside>
 
-
-    <div class="flex flex-col flex-1 w-full overflow-y-auto">
-      <!--Start Topbar -->
-      <!--End Topbar -->
-      <main class="relative z-0 flex-1 px-6 bg-gray-600">
-        <div class="grid  mt-4">
-          <!-- Start Content-->
-
-          <div class="w-full flex space-x-2 justify-between relative">
-
+    <aside class="animate__animated animate__fadeInLeft w-52 relative z-0 flex-shrink-0  px-4 overflow-y-auto bg-gray-900 block " x-show="openMenu ==  0" style="display: none;">
+      <div class="mb-6">
+        <!--Start Sidebar for open menu -->
+        <div class="py-8">
+          <!-- Start Navitem -->
+          <div class="w-full flex  relative">
             <!-- 
             <select id="winnerSelector" class="select select-info max-w-xs w-full ">
               <option selected disabled> Select Winners </option>
@@ -69,7 +65,7 @@ include('dbconnect.php');
 
             <select id="prizeSelect" class="select select-info w-full">
               <option disabled selected>Select Prize</option>
-              <?php $sql = "SELECT tblprize.id as prizeid ,tblprize.prizeName,tblprize.prizePic FROM tblprize";
+              <?php $sql = "SELECT tblprize.id AS prizeid, tblprize.prizeName,tblprize.prizePic FROM tblprize";
               $query = $dbh->prepare($sql);
               $query->execute();
               $results = $query->fetchAll(PDO::FETCH_OBJ);
@@ -92,18 +88,30 @@ include('dbconnect.php');
 
             <!-- <button type="submit" name="submit" class="btn btn-active btn-success">Save</button> -->
           </div>
+          <!-- End Navitem -->
+        </div>
+        <!--End Sidebar for open menu -->
+      </div>
+    </aside>
 
-          <div class="pt-4 flex">
-            <div class="prize w-96 m-2">
+
+    <div class="flex flex-col flex-1 w-full overflow-y-auto">
+      <!--Start Topbar -->
+      <!--End Topbar -->
+      <main class="relative z-0 flex-1 px-6 bg-gray-600">
+        <div class="grid  mt-4">
+          <!-- Start Content-->
+          <div class="pt-4 flex justify-between ">
+            <div class="prize w-2/5 m-2">
               <div class="card shadow-xl h-14 w-full flex justify-center items-center bg-red-500">
                 <div class="py-2 flex flex-col justify-center items-center text-center ">
-                  <p class="card-title" id="shuffleDisplay"> Name Generate</p>
+                  <p class="card-title" id="shuffleDisplay"> Starting !</p>
                 </div>
               </div>
 
-              <div class="card w-fit bg-base-100 shadow-xl mt-4 ">
-                <figure class="px-10 pt-10 object-fill">
-                  <img id="prizeImage" src="./image/qs.jpg" alt="Select Items First!" class="rounded-xl object-fit h-60 w-60" />
+              <div class="card bg-base-100 shadow-xl mt-4 w-full">
+                <figure class="px-10 pt-10">
+                  <img id="prizeImage" src="./image/qs.jpg" alt="Select Items First!" class="rounded-xl object-fill w-full h-[300px]" />
                 </figure>
                 <div class="card-body items-center text-center">
                   <p id="prizeName" class="card-title"></p>
@@ -121,8 +129,8 @@ include('dbconnect.php');
             $sql = "SELECT tblprize.id as prizeid, tbluser.*
             FROM tbluser
             LEFT JOIN tblwinner ON tbluser.id = tblwinner.userId
-            LEFT JOIN tblprize ON tblwinner.priceID = tblprize.id
-            WHERE tblwinner.userid IS NULL"; // Adjust the query based on your table structure
+            LEFT JOIN tblprize ON tblwinner.prizeid = tblprize.id
+            WHERE tblwinner.userid IS NULL";
             $query = $dbh->prepare($sql);
             $query->execute();
             $results = $query->fetchAll(PDO::FETCH_ASSOC);
@@ -132,9 +140,6 @@ include('dbconnect.php');
 
             ?>
             <div class=" m-2 w-full flex flex-col">
-
-
-
               <div id="cardContainer" class="gap-2 w-full flex flex-wrap justify-center space-x-4  items-center">
                 <div class="flex flex-col bg-[#414955] p-2 rounded-lg">
                   <div class="relative flex flex-col justify-center items-center text-center text-white">
@@ -142,7 +147,11 @@ include('dbconnect.php');
                     <p class="card-title text-xl" id="firstIdField">****</p>
                   </div>
                   <div class="relative card w-60 h-60 bg-base-100 shadow-xl">
-                    <span class="absolute" id="firstProfileField"> <img class="w-full h-60 rounded-xl" src="./image/qs.jpg" alt=""></span>
+                    <span class="absolute" id="firstProfileField"> <img class="w-60 h-60 rounded-xl" src="./image/qs.jpg" alt=""></span>
+                  </div>
+                  <div class="relative flex flex-col justify-center items-center text-center text-white">
+                    <p class="card-title text-2xl" id="firstBranch"> ******</p>
+                    <p class="card-title text-xl" id="firstDept">****</p>
                   </div>
                 </div>
 
@@ -154,6 +163,10 @@ include('dbconnect.php');
                   <div class="relative card w-60 h-60 bg-base-100 shadow-xl">
                     <span class="absolute" id="secondProfileField"><img class="w-full h-60 rounded-xl" src="./image/qs.jpg" alt=""></span>
                   </div>
+                  <div class="relative flex flex-col justify-center items-center text-center text-white">
+                    <p class="card-title text-2xl" id="secondBranch"> ******</p>
+                    <p class="card-title text-xl" id="secondDept">****</p>
+                  </div>
                 </div>
 
                 <div class="flex flex-col bg-[#414955] p-2 rounded-lg">
@@ -163,6 +176,38 @@ include('dbconnect.php');
                   </div>
                   <div class="relative card w-60 h-60 bg-base-100 shadow-xl">
                     <span class="absolute" id="thirdProfileField"><img class="w-full h-60 rounded-xl" src="./image/qs.jpg" alt=""></span>
+                  </div>
+                  <div class="relative flex flex-col justify-center items-center text-center text-white">
+                    <p class="card-title text-2xl" id="thirdBranch"> ******</p>
+                    <p class="card-title text-xl" id="thirdDept">****</p>
+                  </div>
+                </div>
+
+                <div class="flex flex-col bg-[#414955] p-2 rounded-lg">
+                  <div class="relative flex flex-col justify-center items-center text-center text-white">
+                    <p class="card-title text-2xl" id="fourthField"> ******</p>
+                    <p class="card-title text-xl" id="fourthIdField"> ****</p>
+                  </div>
+                  <div class="relative card w-60 h-60 bg-base-100 shadow-xl">
+                    <span class="absolute" id="fourthProfileField"><img class="w-full h-60 rounded-xl" src="./image/qs.jpg" alt=""></span>
+                  </div>
+                  <div class="relative flex flex-col justify-center items-center text-center text-white">
+                    <p class="card-title text-2xl" id="fourthBranch"> ******</p>
+                    <p class="card-title text-xl" id="fourthDept">****</p>
+                  </div>
+                </div>
+
+                <div class="flex flex-col bg-[#414955] p-2 rounded-lg">
+                  <div class="relative flex flex-col justify-center items-center text-center text-white">
+                    <p class="card-title text-2xl" id="fifthField"> ******</p>
+                    <p class="card-title text-xl" id="fifthIdField"> ****</p>
+                  </div>
+                  <div class="relative card w-60 h-60 bg-base-100 shadow-xl">
+                    <span class="absolute" id="fifthProfileField"><img class="w-full h-60 rounded-xl" src="./image/qs.jpg" alt=""></span>
+                  </div>
+                  <div class="relative flex flex-col justify-center items-center text-center text-white">
+                    <p class="card-title text-2xl" id="fifthBranch"> ******</p>
+                    <p class="card-title text-xl" id="fifthDept">****</p>
                   </div>
                 </div>
 
@@ -181,15 +226,36 @@ include('dbconnect.php');
   <script>
     const shuffleDisplay = document.getElementById("shuffleDisplay");
     const btnTry = document.getElementById("btnTry");
+
     const firstField = document.getElementById("firstField");
-    const secondField = document.getElementById("secondField");
-    const thirdField = document.getElementById("thirdField");
     const firstIdField = document.getElementById("firstIdField");
-    const secondIdField = document.getElementById("secondIdField");
-    const thirdIdField = document.getElementById("thirdIdField");
     const firstProfileField = document.getElementById("firstProfileField");
+    const firstDept = document.getElementById("firstDept");
+    const firstBranch = document.getElementById("firstBranch");
+
+    const secondField = document.getElementById("secondField");
     const secondProfileField = document.getElementById("secondProfileField");
+    const secondIdField = document.getElementById("secondIdField");
+    const secondDept = document.getElementById("secondDept");
+    const secondBranch = document.getElementById("secondBranch");
+
+    const thirdIdField = document.getElementById("thirdIdField");
     const thirdProfileField = document.getElementById("thirdProfileField");
+    const thirdField = document.getElementById("thirdField");
+    const thirdDept = document.getElementById("thirdDept");
+    const thirdBranch = document.getElementById("thirdBranch");
+
+    const fourthIdField = document.getElementById("fourthIdField");
+    const fourthProfileField = document.getElementById("fourthProfileField");
+    const fourthField = document.getElementById("fourthField");
+    const fourthDept = document.getElementById("fourthDept");
+    const fourthBranch = document.getElementById("fourthBranch");
+
+    const fifthIdField = document.getElementById("fifthIdField");
+    const fifthProfileField = document.getElementById("fifthProfileField");
+    const fifthField = document.getElementById("fifthField");
+    const fifthDept = document.getElementById("fifthDept");
+    const fifthBranch = document.getElementById("fifthBranch");
 
     let participants = <?php echo $participantsArray; ?>;
     let currentWinnerState = "first";
@@ -200,56 +266,65 @@ include('dbconnect.php');
 
     btnTry.addEventListener("click", async () => {
       if (participants.length && currentWinnerState) {
-        participants.sort(() => Math.floor(Math.random() - 0.5));
-
+        // Display each randomly selected participant before settling on a winner
         for (let i = 0; i < participants.length; i++) {
-          await sleep(50); // Add a delay for visibility
+          await sleep(100); // Add a delay for visibility
           const selectedParticipant = participants[i];
           console.log(`Selected Participant: ${selectedParticipant.name}`);
           shuffleDisplay.textContent = selectedParticipant.name;
         }
 
-        const selectedWinner = participants.shift();
-
-
-        participants.splice(0, 1);
-
-        // Fetch winner details directly from the participants array
+        const selectedIndex = Math.floor(Math.random() * participants.length);
+        const selectedParticipant = participants.splice(selectedIndex, 1)[0];
         const winnerName = shuffleDisplay.textContent;
         const winnerDetails = fetchWinnerDetails(winnerName);
-
-        // Display the winner in the appropriate fields
-        if (winnerDetails && currentWinnerState === "first") {
-          displayWinner(firstField, firstIdField, firstProfileField, winnerDetails);
+        // Display the final winner in the appropriate fields
+        if (selectedParticipant && currentWinnerState === "first") {
+          displayWinner(firstField, firstIdField, firstProfileField, firstBranch, firstDept, selectedParticipant, document.getElementById("prizeSelect"));
           currentWinnerState = "second";
-          console.log(firstField)
-          insertWinnerData(winnerDetails, document.getElementById("prizeSelect"));
+          insertWinnerData(selectedParticipant, document.getElementById("prizeSelect"));
+          shuffleDisplay.textContent = "Stop";
 
-        } else if (winnerDetails && currentWinnerState === "second") {
-          displayWinner(secondField, secondIdField, secondProfileField, winnerDetails);
+        } else if (selectedParticipant && currentWinnerState === "second") {
+          displayWinner(secondField, secondIdField, secondProfileField, secondBranch, secondDept, selectedParticipant);
           currentWinnerState = "third";
+          insertWinnerData(selectedParticipant, document.getElementById("prizeSelect"));
+          shuffleDisplay.textContent = "Stop";
 
-          insertWinnerData(winnerDetails, document.getElementById("prizeSelect"));
+        } else if (selectedParticipant && currentWinnerState === "third") {
+          displayWinner(thirdField, thirdIdField, thirdProfileField, thirdBranch, thirdDept, selectedParticipant);
+          currentWinnerState = "fourth";
+          shuffleDisplay.textContent = "Stop";
+          insertWinnerData(selectedParticipant, document.getElementById("prizeSelect"));
 
-        } else if (winnerDetails && currentWinnerState === "third") {
-          displayWinner(thirdField, thirdIdField, thirdProfileField, winnerDetails);
+        } else if (selectedParticipant && currentWinnerState === "fourth") {
+          displayWinner(fourthField, fourthIdField, fourthProfileField, fourthBranch, fourthDept, selectedParticipant);
+          currentWinnerState = "fifth";
+          insertWinnerData(selectedParticipant, document.getElementById("prizeSelect"));
+          shuffleDisplay.textContent = "Stop";
+
+        } else if (selectedParticipant && currentWinnerState === "fifth") {
+          displayWinner(fifthField, fifthIdField, fifthProfileField, fifthBranch, fifthDept, selectedParticipant);
           currentWinnerState = "";
-          shuffleDisplay.textContent = "display";
-
-          insertWinnerData(winnerDetails, document.getElementById("prizeSelect"));
+          insertWinnerData(selectedParticipant, document.getElementById("prizeSelect"));
+          shuffleDisplay.textContent = "Stop";
         }
+
       }
+
     });
 
-    function displayWinner(nameField, idField, profileField, winnerDetails, winnerPrize, selectElement) {
-      nameField.textContent = shuffleDisplay.textContent;
-      idField.textContent = `អត្តលេខ: ${winnerDetails.staffID}`;
+    function displayWinner(nameField, idField, profileField, branchField, deptField, winnerDetails, selectElement) {
+      nameField.textContent = winnerDetails.name;
+      idField.textContent = ` ${winnerDetails.staffID}`;
+      branchField.textContent = `Branch: ${winnerDetails.branch}`;
+      deptField.textContent = `Dept: ${winnerDetails.dept}`;
 
       // Check if winnerDetails has a profile image URL
       if (winnerDetails.profileImageUrl) {
-        profileField.textContent = `Profile: ${winnerDetails.profile}`;
+        profileField.textContent = `Profile: not found`;
       } else {
-        profileField.innerHTML = `<img class="w-full h-60 rounded-xl" src="${winnerDetails.profile}" alt="Profile Image">`;
+        profileField.innerHTML = `<img class="w-60 h-60 rounded-xl" src="${winnerDetails.profile}" alt="Profile Image">`;
       }
 
       // Update winnerPrize based on the selected option
@@ -261,6 +336,7 @@ include('dbconnect.php');
           winnerDetails.prizePic = selectedOption.getAttribute('data-img');
         }
       }
+      // console.log(" is: ", selectElement);
 
     }
 
@@ -305,9 +381,12 @@ include('dbconnect.php');
       };
 
       xhr.send(JSON.stringify(data));
+      console.log(winnerDetails)
     }
   </script>
   <!-- Draw Winner -->
+
+
 
 </body>
 

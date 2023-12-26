@@ -60,7 +60,7 @@ if (isset($_GET['delid'])) {
       </div>
     </aside>
     <!-- Start Open Menu -->
-    <aside class="animate__animated animate__fadeInLeft w-52 relative z-0 flex-shrink-0  px-4 overflow-y-auto bg-gray-100 block " x-show="openMenu ==  1" style="display: none;">
+    <aside class="animate__animated animate__fadeInLeft w-52 relative z-0 flex-shrink-0  px-4 overflow-y-auto bg-gray-100 block " x-show="openMenu ==  0" style="display: none;">
       <div class="mb-6">
         <!--Start Sidebar for open menu -->
         <div class="grid grid-cols-1 gap-4 grid-cols-2 mt-6">
@@ -332,7 +332,7 @@ if (isset($_GET['delid'])) {
                       </td>
 
                       <td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-500 text-sm leading-5">
-                        <a href="dashboard.php?delid=<?php echo ($row->winnerID); ?>" onclick="return confirm('Do you really want to Delete ?');" class="px-5 py-2 border-red-500 border text-red-500 rounded transition duration-300 hover:bg-red-700 hover:text-white focus:outline-none">View Details</a>
+                        <a href="dashboard.php?delid=<?php echo ($row->winnerID); ?>" onclick="return confirm('Do you really want to Delete ?');" class="px-5 py-2 border-red-500 border text-red-500 rounded transition duration-300 hover:bg-red-700 hover:text-white focus:outline-none">DELETE</a>
                       </td>
                     </tr>
                 <?php }

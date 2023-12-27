@@ -285,7 +285,7 @@ if (isset($_GET['delid'])) {
                 tbluser.dept, tbluser.profile, tblwinner.id AS winnerID
                 FROM tblwinner 
                 JOIN tbluser ON tbluser.id = tblwinner.userId
-                INNER JOIN tblprize ON tblprize.id = tblwinner.priceID
+                INNER JOIN tblprize ON tblprize.id = tblwinner.prizeID
                 ORDER BY tblwinner.id DESC";
                 $query = $dbh->prepare($sql);
                 $query->execute();
